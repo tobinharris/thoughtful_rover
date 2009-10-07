@@ -17,6 +17,8 @@ class Parser
     @parse_tree                    
   end
   
+  private 
+  
   def parse_upper_right line
     matches = line.match BOUNDS_EXPRESSION
     @parse_tree[:upper_right_bounds] = matches[1].to_i, matches[2].to_i
