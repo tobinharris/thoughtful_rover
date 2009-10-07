@@ -68,9 +68,7 @@ end
 class Parser
   @@bounds_expression =  "([0-9]) ([0-9])"
   @@initial_location_expression = "([0-9]) ([0-9]) ([NESW])"   
-  @@movements_expression = "[LRM]+"
-  
- 
+  @@movements_expression = "[LRM]+" 
   
   attr_accessor :rovers
     
@@ -131,8 +129,8 @@ describe Parser do
     MMRMMRMRRM
     EOS
     
-    @program = Parser.new
-    @parse_tree = @program.parse(program_string)    
+    @parser = Parser.new
+    @parse_tree = @parser.parse(program_string)    
   end
   
   it "Should allocate first line of input is the upper-right coordinates of the plateau" do
@@ -149,8 +147,8 @@ describe Parser do
   end          
   
   it "Should perform movements" do
-    @program.execute    
-    puts @program.rovers
+    @parser.execute    
+    puts @parser.rovers
   end
 
 end
