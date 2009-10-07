@@ -66,14 +66,11 @@ class Rover
 end      
 
 class Parser
-  @@bounds_expression =  "([0-9]) ([0-9])"
-  @@initial_location_expression = "([0-9]) ([0-9]) ([NESW])"   
-  @@movements_expression = "[LRM]+" 
-  
-  attr_accessor :rovers
+  BOUNDS_EXPRESSION =  "([0-9]) ([0-9])"
+  INITIAL_LOCATION_EXPRESSION = "([0-9]) ([0-9]) ([NESW])"   
+  MOVEMENTS_EXPRESSION = "[LRM]+" 
     
   def initialize 
-    self.rovers = []    
     @parse_tree = {:upper_right_bounds => nil, :rover_instructions => []} 
   end
   
@@ -88,7 +85,7 @@ class Parser
   end
   
   def parse_upper_right line
-    matches = line.match @@bounds_expression
+    matches = line.match BOUNDS_EXPRESSION
     @parse_tree[:upper_right_bounds] = matches[1].to_i, matches[2].to_i
   end 
   
@@ -97,22 +94,31 @@ class Parser
   end
   
   def parse_position line      
-    matches = line.match /([0-9]) ([0-9]) ([NESW])/
+    matches = line.match INITIAL_LOCATION_EXPRESSION
     [matches[1].to_i, matches[2].to_i, matches[3]]
-  end     
-  
-  def execute     
-    @parse_tree[:rover_instructions].each do |instr|      
-      rover = Rover.new                    
-      self.rovers << rover
-      rover.x = instr[:initial_position][0] 
-      rover.y = instr[:initial_position][1]     
-      rover.facing = instr[:initial_position][2]  
-      rover.commands = instr[:movements]    
-      rover.bounds = @parse_tree[:upper_right_bounds]     
-      rover.follow_commands             
+  end 
+end          
+
+class Program    
+    attr_accessor :rovers   
+    
+    def load program_text
+      @parse_tree = Parser.new.parse(program_text)      
+      self.rovers = []
     end
-  end      
+    
+    def run     
+      @parse_tree[:rover_instructions].each do |instr|      
+        rover = Rover.new                    
+        self.rovers << rover
+        rover.x = instr[:initial_position][0] 
+        rover.y = instr[:initial_position][1]     
+        rover.facing = instr[:initial_position][2]  
+        rover.commands = instr[:movements]    
+        rover.bounds = @parse_tree[:upper_right_bounds]     
+        rover.follow_commands             
+      end    
+  end
 end
 
 require 'rubygems'
@@ -129,26 +135,40 @@ describe Parser do
     MMRMMRMRRM
     EOS
     
-    @parser = Parser.new
-    @parse_tree = @parser.parse(program_string)    
+    @parse_tree = Parser.new.parse(program_string)    
   end
   
   it "Should allocate first line of input is the upper-right coordinates of the plateau" do
     @parse_tree[:upper_right_bounds].should == [5,5]
   end
   
-  it "Should allocate other four lines as input for two rovers" do
+  it "Should allocate other four lines as two sets of rover instructions" do
     @parse_tree[:rover_instructions].length.should == 2
   end
   
-  it "Should allocate first line gives the rover's position" do               
+  it "Should allocate first line of input to the rover's initial position" do               
     @parse_tree[:rover_instructions][0][:initial_position].should == [1,2,'N'] 
     @parse_tree[:rover_instructions][1][:initial_position].should == [3,3,'E'] 
-  end          
-  
-  it "Should perform movements" do
-    @parser.execute    
-    puts @parser.rovers
-  end
+  end            
+end       
 
+describe Program do
+  before(:each) do  
+     program_string = <<-EOS
+     5 5
+     1 2 N
+     LMLMLMLMM
+     3 3 E
+     MMRMMRMRRM
+     EOS
+          
+     @program = Program.new
+     @program.load program_string
+   end
+   
+  it "Should perform movements" do
+    @program.run
+    puts @program.rovers
+  end     
+  
 end
