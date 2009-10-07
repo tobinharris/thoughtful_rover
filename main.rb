@@ -20,7 +20,7 @@ class Rover
   attr_accessor :bounds      
   
   def initialize
-    @@possible_steps = {
+    @possible_steps = {
     'N'=>lambda{ self.x = self.x + 1 }, #north
     'E'=>lambda{ self.y = self.y + 1 }, #east
     'S'=>lambda{ self.x = self.x - 1 }, #south    
@@ -105,7 +105,8 @@ class Program
       rover.x = instr[:initial_position][0] 
       rover.y = instr[:initial_position][1]     
       rover.facing = instr[:initial_position][2]  
-      rover.commands = instr[:movements]         
+      rover.commands = instr[:movements]    
+      rover.bounds = self.upper_right     
       rover.follow_commands             
     end
   end      
