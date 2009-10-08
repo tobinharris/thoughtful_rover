@@ -1,7 +1,3 @@
-#
-# Simple parser is responsible for taking Rover input and converting it into a parse tree containing 
-# nodes needed to set up the rovers
-#
 class Parser
     
   def initialize 
@@ -26,7 +22,7 @@ class Parser
   end 
   
   def parse_rover_instructions line_1, line_2
-    @parse_tree[:rover_instructions] << {:initial_position=> parse_initial_position(line_1), :movements=>parse_movements line_2}
+    @parse_tree[:rover_instructions] << {:initial_position=> parse_initial_position(line_1), :movements=>parse_movements(line_2)}
   end
   
   def parse_initial_position line      
@@ -35,7 +31,7 @@ class Parser
   end 
   
   def parse_movements line
-    matches = /([LRM]+)/
+    matches = line.match /([LRM]+)/
     matches[1]
   end
 end

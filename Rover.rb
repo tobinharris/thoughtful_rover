@@ -20,13 +20,23 @@ class Rover
                 }                       
   end
   
-  def follow_commands    
+  def self_check
+    throw "Rover x co-ord cannot be nil." if self.x.nil?
+    throw "Rover y co-ord cannot be nil." if self.y.nil?
+    throw "Rover facing cannot be nil." if self.facing.nil?
+    throw "Rover facing must be one of N,E,S or W." unless self.facing =~ /[NESW]/
+    throw "Rover cannot be out of bounds." if self.x > self.bounds[0] or self.y > self.bounds[1] or self.x < 0 or self.y < 0
+  end  
+  
+  def follow_commands   
+    self_check     
     self.commands.scan(/./) do |c|
       if @rotate_commands[c] then @rotate_commands[c].call else throw "Unknown Rover command #{c}" end       
+      self_check
     end
   end   
   
-  def rotate_left     
+  def rotate_left         
     current = ['N','E','S','W'].index(self.facing)
     self.facing = current == 0 ? 'W' : ['N','E','S','W'][current - 1]    
   end
