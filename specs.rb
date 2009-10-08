@@ -1,3 +1,6 @@
+require 'main'
+require 'Parser'
+require 'Rover'
 
 require 'rubygems'
 require 'spec'
