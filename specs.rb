@@ -28,8 +28,8 @@ describe Parser do
   end
   
   it "Should allocate first line of input to the rover's initial position" do               
-    @parse_tree[:rover_instructions][0][:initial_position].should == [1,2,'N'] 
-    @parse_tree[:rover_instructions][1][:initial_position].should == [3,3,'E'] 
+    @parse_tree[:rover_instructions][0][:initial_position].should == {:x=>1, :y=>2, :facing=>'N'} 
+    @parse_tree[:rover_instructions][1][:initial_position].should == {:x=>3, :y=>3, :facing=>'E'}
   end            
 end       
 
