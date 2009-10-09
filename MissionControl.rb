@@ -1,7 +1,7 @@
 class MissionControl      
   def deploy_rovers(program_text)        
     @rovers = []     
-    @parse_tree = Parser.new.parse(program_text)      
+    @parse_tree = Parser.new.parse(program_text)          
     @parse_tree[:rover_instructions].each do |instructions|      
       rover = Rover.new                    
       @rovers << rover

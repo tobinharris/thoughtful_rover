@@ -27,12 +27,12 @@ class Rover
   def errors
     errors = []
     errors << "Bounds should be set." unless self.bounds
-    errors << "co-ord cannot be nil." unless self.x
+    errors << "X co-ord cannot be nil." unless self.x
     errors << "Y co-ord cannot be nil." unless self.y
     errors << "Facing cannot be nil." unless self.facing 
     errors << "Facing cannot be nil." unless self.commands
     errors << "Facing must be one of N,E,S or W." unless self.facing =~ /[NESW]/
-    errors << "Cannot be out of bounds." if self.bounds and (self.x > self.bounds[0] or self.y > self.bounds[1] or self.x < 0 or self.y < 0)
+    errors << "Cannot be out of bounds." if self.bounds and self.x and self.y and (self.x > self.bounds[0] or self.y > self.bounds[1] or self.x < 0 or self.y < 0)
     errors
   end  
   

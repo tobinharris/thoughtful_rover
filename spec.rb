@@ -60,32 +60,49 @@ describe Rover do
     @rover.errors.length.should == 0
   end   
   
-  it "Should rotate right and face east if facing north" do
+  it "Should rotate right and then be facing east" do
     reset_rover
     @rover.rotate_right
     @rover.facing.should == 'E'
   end
   
-  it "Should rotate left and face west if facing north" do
+  it "Should rotate left and then be facign west" do
     reset_rover
     @rover.rotate_left
     @rover.facing.should == 'W'
   end
   
   
-  it "Should rotate left twice and face south if facing north" do
+  it "Should rotate left twice and then be facing south" do
     reset_rover
     @rover.rotate_left
     @rover.rotate_left
     @rover.facing.should == 'S'
   end      
   
+  it "Should rotate right 4 times and then be facing north again" do
+    reset_rover
+    @rover.rotate_right
+    @rover.rotate_right
+    @rover.rotate_right
+    @rover.rotate_right      
+    @rover.facing.should == 'N'
+  end      
+  
+  
   it "Should be able to move north" do
     reset_rover
-    @rover.position.should == [2,2]
     @rover.move_forward
     @rover.position.should == [2,3]
-  end
+  end 
+  
+  it "Should be able to move south" do
+     reset_rover
+     @rover.rotate_left
+     @rover.rotate_left
+     @rover.move_forward
+     @rover.position.should == [2,1]
+   end
   
 end   
 

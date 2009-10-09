@@ -18,7 +18,8 @@ class Parser
   
   def parse_upper_right_bounds line
     matches = line.match /([0-9]) ([0-9])/
-    @parse_tree[:upper_right_bounds] = matches[1].to_i, matches[2].to_i
+    @parse_tree[:upper_right_bounds] = matches[1].to_i, matches[2].to_i   
+    throw "Parse error: Upper Right Bounds not valid '#{matches[0]}'" if @parse_tree[:upper_right_bounds][0].nil? or @parse_tree[:upper_right_bounds][1].nil?
   end 
   
   def parse_rover_instructions line_1, line_2
