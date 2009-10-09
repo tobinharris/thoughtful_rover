@@ -19,7 +19,8 @@ class MissionControl
     end    
   end  
   
+  # Reports on the position of the rovers
   def report
-    @rovers.join("\n")
+    @rovers.join("\n") if @rovers
   end
 end
