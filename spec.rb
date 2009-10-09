@@ -8,7 +8,7 @@ require 'Rover'
 describe Parser do
 
   before(:each) do  
-    program_string = <<-EOS
+    program = <<-EOS
     5 5
     1 2 N
     LMLMLMLMM
@@ -16,7 +16,7 @@ describe Parser do
     MMRMMRMRRM
     EOS
     
-    @parse_tree = Parser.new.parse(program_string)    
+    @parse_tree = Parser.new.parse(program)    
   end
   
   it "Should allocate first line of input is the upper-right coordinates of the plateau" do
@@ -97,7 +97,7 @@ end
 
 describe MissionControl do
   before(:all) do  
-     @program_string = <<-EOS
+     @program = <<-EOS
      5 5
      1 2 N
      LMLMLMLMM
@@ -108,7 +108,7 @@ describe MissionControl do
    
   it "Should perform movements" do
     m = MissionControl.new
-    m.deploy_rovers @program_string
+    m.deploy_rovers @program
     m.report.should == "1 3 N\n5 1 E"
   end     
   
