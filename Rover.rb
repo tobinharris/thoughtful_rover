@@ -16,9 +16,6 @@ class Rover
     @facing = facing
     @movements = movements
     @bounds = bounds
-    
-    # rover won't get past intialization if the class invariants aren't satisfied
-    
       
     # dictionary of move and advance commands                    
     @commands = {
