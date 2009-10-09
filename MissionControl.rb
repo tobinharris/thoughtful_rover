@@ -1,21 +1,16 @@
-class MissionControl    
-    attr_accessor :rovers   
-    
-    def load program_text
-      @parse_tree = Parser.new.parse(program_text)      
-      self.rovers = []
-    end
-    
-    def run     
-      @parse_tree[:rover_instructions].each do |instr|      
-        rover = Rover.new                    
-        self.rovers << rover
-        rover.x = instr[:initial_position][:X] 
-        rover.y = instr[:initial_position][:y]     
-        rover.facing = instr[:initial_position][:facing]  
-        rover.commands = instr[:movements]    
-        rover.bounds = @parse_tree[:upper_right_bounds]     
-        rover.follow_commands             
-      end    
+class MissionControl      
+  def deploy_rovers(program_text)        
+    @rovers = []     
+    @parse_tree = Parser.new.parse(program_text)      
+    @parse_tree[:rover_instructions].each do |instructions|      
+      rover = Rover.new                    
+      @rovers << rover
+      rover.x = instructions[:initial_position][:X] 
+      rover.y = instructions[:initial_position][:y]     
+      rover.facing = instructions[:initial_position][:facing]  
+      rover.commands = instructions[:movements]    
+      rover.bounds = @parse_tree[:upper_right_bounds]     
+      rover.follow_commands             
+    end    
   end
 end
