@@ -1,73 +1,88 @@
-
+#
+# Responsible for taking commands and moving about within the given plateau bounds 
+#
 class Rover    
-  attr_accessor :x
-  attr_accessor :y
-  attr_accessor :facing  
-  attr_accessor :commands
-  attr_accessor :bounds      
-  
-  def initialize(options = nil)
-    @move_in_direction_commands = {
-                        'N'=>lambda{ self.y = self.y + 1 }, #north
-                        'E'=>lambda{ self.x = self.x + 1 }, #east
-                        'S'=>lambda{ self.y = self.y - 1 }, #south    
-                        'W'=>lambda{ self.x = self.x - 1 } #west
-                      }  
-    @rotate_commands = {
+  attr_reader :x
+  attr_reader :y
+  attr_reader :facing  
+  attr_reader :commands
+  attr_reader :bounds      
+    
+  # Assuming this is an immutable "Fire And Forget" rover 
+  def initialize(x, y, facing, movements, bounds)
+    
+    @x = x
+    @y = y
+    @facing = facing
+    @movements = movements
+    @bounds = bounds
+    
+    # rover won't get past intialization if the class invariants aren't satisfied
+    
+      
+    # dictionary of move and advance commands                    
+    @commands = {
                    'L' => lambda{rotate_left},
                    'R' => lambda{rotate_right},
-                   'M' => lambda{move_forward}
+                   'M' => lambda{advance}
                 }                       
-    options.each do |key,val| self.send("#{key}=", val) end if options
+                
+    # dictionary of commands for executing moves in particular directions
+    @directional_commands = {
+                        'N'=>lambda{ @y = @y + 1 }, #north
+                        'E'=>lambda{ @x = @x + 1 }, #east
+                        'S'=>lambda{ @y = @y - 1 }, #south    
+                        'W'=>lambda{ @x = @x - 1 }  #west
+                      } 
   end     
   
+  # Handy method to get current x,y coords
   def position 
     [self.x,self.y]
   end 
-  
-  def position=(pos)
-    self.x = pos[0]
-    self.y = pos[1]
-  end
-  
-  def errors
-    errors = []
-    errors << "Bounds should be set." unless self.bounds
-    errors << "X co-ord cannot be nil." unless self.x
-    errors << "Y co-ord cannot be nil." unless self.y
-    errors << "Facing cannot be nil." unless self.facing 
-    errors << "Facing cannot be nil." unless self.commands
-    errors << "Facing must be one of N,E,S or W." unless self.facing =~ /[NESW]/
-    errors << "Cannot be out of bounds." if self.bounds and self.x and self.y and (self.x > self.bounds[0] or self.y > self.bounds[1] or self.x < 0 or self.y < 0)
-    errors
+   
+  # Is Rover in a valid state?
+  def get_errors
+    arr = []
+    arr << "Bounds should be set." unless @bounds
+    arr << "X co-ord cannot be nil." unless @x
+    arr << "Y co-ord cannot be nil." unless @y
+    arr << "Facing cannot be nil." unless @facing 
+    arr << "Facing cannot be nil." unless @commands
+    arr << "Facing must be one of N,E,S or W." unless @facing =~ /[NESW]/
+    arr << "Cannot be out of bounds." if @bounds and @x and @y and (@x > @bounds[0] or @y > @bounds[1] or @x < 0 or @y < 0)
+    arr
   end  
   
-  def die_if_errors
-    throw errors.join(' ') unless errors.empty?     
+  # If anything goes wrong, rover will self destruct.
+  # There are probably less costly options :)
+  def explode_if_broken_invariants
+    throw "Bang! " + get_errors.join(' ') unless get_errors.empty?     
   end
   
+  # Drop the rover on the plateau and start executing commands
   def deploy   
-    die_if_errors
-    self.commands.scan(/./) do |c|
-      if @rotate_commands[c] then @rotate_commands[c].call else throw "Unknown Rover command #{c}" end       
-      die_if_errors
+    explode_if_broken_invariants
+    @movements.scan(/./) do |c|
+      if @commands[c] then @commands[c].call else throw "Unknown Rover command #{c}" end       
+      explode_if_broken_invariants
     end
   end   
-  
+    
   def rotate_left         
     current = ['N','E','S','W'].index(self.facing)     
     throw "Not facing any direction '#{self.facing}'! " if current.nil? 
-    self.facing = current == 0 ? 'W' : ['N','E','S','W'][current - 1]    
+    @facing = current == 0 ? 'W' : ['N','E','S','W'][current - 1]    
   end
   
   def rotate_right
     current = ['N','E','S','W'].index(self.facing)        
     throw "Not facing any direction '#{self.facing}'! " if current.nil? 
-    self.facing = current == 3 ? 'N' : ['N','E','S','W'][current + 1]    
+    @facing = current == 3 ? 'N' : ['N','E','S','W'][current + 1]    
   end
   
-  def move_forward
-    @move_in_direction_commands[self.facing].call
+  def advance
+    @directional_commands[self.facing].call
   end     
   
   def to_s

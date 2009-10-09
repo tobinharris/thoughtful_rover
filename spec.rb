@@ -35,48 +35,45 @@ end
 
 describe Rover do
   
-  before :each do
-    @rover = Rover.new
-  end     
   
-  def reset_rover
-    @rover = Rover.new :x=>2, :y=>2, :facing=>'N', :bounds=>[5,5], :commands=>'M'
+  before(:each) do
+    @rover = Rover.new 2, 2, 'N', [5,5], 'M'
   end
   
   it "Should give errors if not initialized with all values" do
-    @rover.errors.length.should == 6   
-    @rover.position = [2,2]
-    @rover.errors.length.should == 4
-    @rover.facing = 'N'
-    @rover.errors.length.should == 2
-    @rover.bounds = [5,5]
-    @rover.errors.length.should == 1 
-    @rover.commands = 'M'
-    @rover.errors.length.should == 0
+    @rover = Rover.new nil, nil, nil, nil, nil
+    @rover.get_errors.length.should == 5  
+    
+    @rover = Rover.new 2, 2, nil, nil, nil
+    @rover.get_errors.length.should == 3
+    
+    @rover = Rover.new 2, 2, 'N', nil, nil
+    @rover.get_errors.length.should == 1            
+    
+    @rover = Rover.new 2, 2, 'N', [5,5], nil
+    @rover.get_errors.length.should == 1 
+    
+    @rover = Rover.new 2, 2, 'N', [5,5], 'LLMRM'
+    @rover.get_errors.length.should == 0
   end   
   
   it "Should rotate right and then be facing east" do
-    reset_rover
     @rover.rotate_right
     @rover.facing.should == 'E'
   end
   
   it "Should rotate left and then be facign west" do
-    reset_rover
     @rover.rotate_left
     @rover.facing.should == 'W'
   end
-  
-  
+                                                      
   it "Should rotate left twice and then be facing south" do
-    reset_rover
     @rover.rotate_left
     @rover.rotate_left
     @rover.facing.should == 'S'
   end      
   
   it "Should rotate right 4 times and then be facing north again" do
-    reset_rover
     @rover.rotate_right
     @rover.rotate_right
     @rover.rotate_right
@@ -84,18 +81,15 @@ describe Rover do
     @rover.facing.should == 'N'
   end      
   
-  
   it "Should be able to move north" do
-    reset_rover
-    @rover.move_forward
+    @rover.advance
     @rover.position.should == [2,3]
   end 
   
   it "Should be able to move south" do
-     reset_rover
      @rover.rotate_left
      @rover.rotate_left
-     @rover.move_forward
+     @rover.advance
      @rover.position.should == [2,1]
    end
   

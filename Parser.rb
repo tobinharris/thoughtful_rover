@@ -1,6 +1,10 @@
+# 
+# Responsible for parsing a Mars Rover program text and returning a concrete syntax tree
+#
 class Parser
     
   def initialize 
+    # Concrete Parse Tree will hold information from the program text    
     @parse_tree = {:upper_right_bounds => {:x=>nil, :y=>nil}, :rover_instructions => []} 
   end
   
