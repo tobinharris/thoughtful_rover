@@ -81,10 +81,12 @@ class Rover
     @facing = current == 3 ? 'N' : ['N','E','S','W'][current + 1]    
   end
   
+  # Move forward in whatever direction the rover is facing.
   def advance
     @directional_commands[self.facing].call
   end     
   
+  # This is the most useful string representation of a Rover, .inspect would do for more in-depth
   def to_s
     "#{x} #{y} #{facing}"   
   end
