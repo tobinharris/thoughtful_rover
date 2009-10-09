@@ -45,8 +45,7 @@ describe Rover do
   
   it "Should give errors if not initialized with all values" do
     @rover.errors.length.should == 6   
-    @rover.x = 2
-    @rover.y = 2
+    @rover.position = [2,2]
     @rover.errors.length.should == 4
     @rover.facing = 'N'
     @rover.errors.length.should == 2
