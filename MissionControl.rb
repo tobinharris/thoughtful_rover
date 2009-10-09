@@ -1,9 +1,9 @@
-#
-#  Reponsible for taking a rover program and deploying necessary rovers to carry it out 
-#           
 require 'Parser' 
 require 'Rover'
 
+#
+#  Reponsible for taking a rover program and deploying necessary rovers to carry it out 
+#           
 class MissionControl      
   def deploy_rovers(program_text)        
     @rovers = []     
