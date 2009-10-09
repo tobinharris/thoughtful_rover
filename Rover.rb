@@ -1,12 +1,12 @@
 
-class Rover  
+class Rover    
   attr_accessor :x
   attr_accessor :y
   attr_accessor :facing  
   attr_accessor :commands
   attr_accessor :bounds      
   
-  def initialize
+  def initialize(options = nil)
     @move_in_direction_commands = {
                         'N'=>lambda{ self.y = self.y + 1 }, #north
                         'E'=>lambda{ self.x = self.x + 1 }, #east
@@ -18,10 +18,16 @@ class Rover
                    'R' => lambda{rotate_right},
                    'M' => lambda{move_forward}
                 }                       
+    options.each do |key,val| self.send("#{key}=", val) end if options
   end     
   
   def position 
     [self.x,self.y]
+  end 
+  
+  def position=(pos)
+    self.x = pos[0]
+    self.y = pos[1]
   end
   
   def errors
@@ -40,7 +46,7 @@ class Rover
     throw errors.join(' ') unless errors.empty?     
   end
   
-  def follow_commands   
+  def deploy   
     die_if_errors
     self.commands.scan(/./) do |c|
       if @rotate_commands[c] then @rotate_commands[c].call else throw "Unknown Rover command #{c}" end       

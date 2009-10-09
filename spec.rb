@@ -40,11 +40,7 @@ describe Rover do
   end     
   
   def reset_rover
-    @rover.x = 2
-    @rover.y = 2
-    @rover.facing = 'N'
-    @rover.bounds = [5,5]   
-    @rover.commands = 'M'
+    @rover = Rover.new :x=>2, :y=>2, :facing=>'N', :bounds=>[5,5], :commands=>'M'
   end
   
   it "Should give errors if not initialized with all values" do
