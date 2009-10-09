@@ -107,7 +107,7 @@ describe Rover do
 end   
 
 describe MissionControl do
-  before(:each) do  
+  before(:all) do  
      @program_string = <<-EOS
      5 5
      1 2 N
@@ -115,13 +115,12 @@ describe MissionControl do
      3 3 E
      MMRMMRMRRM
      EOS
-          
-     @mission_control = MissionControl.new     
    end
    
   it "Should perform movements" do
-    @mission_control.deploy_rovers(@program_string)
-    puts @mission_control.rovers
+    m = MissionControl.new
+    m.deploy_rovers @program_string
+    m.report.should == "1 3 N\n5 1 E"
   end     
   
 end
